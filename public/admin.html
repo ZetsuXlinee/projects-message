@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="login">
+    <h2>Admin Login</h2>
+    <input id="nameInput" placeholder="Nama Admin" value="Admin" />
+    <input id="passInput" type="password" placeholder="Password" />
+    <button id="joinBtn">Login Admin</button>
+  </div>
+
+  <div id="chat" class="hidden">
+    <div class="sidebar">
+      <h3>Users (Admin)</h3>
+      <ul id="usersList"></ul>
+    </div>
+    <div class="main">
+      <div class="header">
+        <span>Admin Panel</span>
+      </div>
+      <div id="messages"></div>
+      <div class="input-area">
+        <input id="msgInput" placeholder="Broadcast pesan..." />
+        <button id="sendBtn">Kirim</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+    let me = null;
+
+    document.getElementById('joinBtn').onclick = () => {
+      const name = document.getElementById('nameInput').value.trim();
+      const password = document.getElementById('passInput').value;
+      if (!name) return alert('Isi nama');
+      socket.emit('join', { name, isAdmin: true, password });
+    };
+
+    socket.on('joined', (user) => {
+      me = user;
+      document.getElementById('login').classList.add('hidden');
+      document.getElementById('chat').classList.remove('hidden');
+    });
+
+    socket.on('error', (msg) => alert(msg));
+
+    socket.on('users_list', (list) => {
+      const ul = document.getElementById('usersList');
+      ul.innerHTML = '';
+      list.forEach(u => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+          <span class="dot ${u.status}"></span>
+          ${u.name} ${u.isAdmin ? '(Admin)' : ''}
+          \( {u.status === 'online' ? '' : `<small> \){new Date(u.lastSeen).toLocaleString()}</small>`}
+          \( {!u.isAdmin ? `<button onclick="kick(' \){u.id}')">Kick</button>` : ''}
+        `;
+        ul.appendChild(li);
+      });
+    });
+
+    socket.on('history', (msgs) => {
+      msgs.forEach(addMsg);
+    });
+
+    socket.on('new_message', addMsg);
+    socket.on('message_deleted', (id) => {
+      document.getElementById('msg-' + id)?.remove();
+    });
+
+    function addMsg(m) {
+      const div = document.createElement('div');
+      div.className = 'msg';
+      div.id = 'msg-' + m.id;
+      div.innerHTML = `
+        <b>${m.fromName}</b>: ${m.text}
+        <small>${new Date(m.time).toLocaleTimeString()}</small>
+        <button onclick="delMsg('${m.id}')">Hapus</button>
+      `;
+      document.getElementById('messages').appendChild(div);
+      document.getElementById('messages').scrollTop = 99999;
+    }
+
+    document.getElementById('sendBtn').onclick = () => {
+      const text = document.getElementById('msgInput').value.trim();
+      if (!text) return;
+      socket.emit('send_message', { text, to: 'all' });
+      document.getElementById('msgInput').value = '';
+    };
+
+    window.kick = (id) => socket.emit('admin_kick', id);
+    window.delMsg = (id) => socket.emit('admin_delete_msg', id);
+  </script>
+</body>
+</html>
