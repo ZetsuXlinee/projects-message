@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat Offline-Online</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="login">
+    <h2>Masuk Chat</h2>
+    <input id="nameInput" placeholder="Nama kamu" />
+    <button id="joinBtn">Join</button>
+  </div>
+
+  <div id="chat" class="hidden">
+    <div class="sidebar">
+      <h3>Users</h3>
+      <ul id="usersList"></ul>
+    </div>
+    <div class="main">
+      <div class="header">
+        <span id="roomTitle">Public Chat</span>
+        <span id="status"></span>
+      </div>
+      <div id="messages"></div>
+      <div id="typing"></div>
+      <div class="input-area">
+        <input id="msgInput" placeholder="Ketik pesan..." />
+        <button id="sendBtn">Kirim</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="client.js"></script>
+</body>
+</html>
