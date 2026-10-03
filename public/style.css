@@ -1,0 +1,55 @@
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, sans-serif; }
+body { background: #0b141a; color: #e9edef; height: 100vh; }
+.hidden { display: none !important; }
+
+#login {
+  max-width: 360px; margin: 100px auto; padding: 30px;
+  background: #202c33; border-radius: 12px; text-align: center;
+}
+#login input, #login button {
+  width: 100%; padding: 12px; margin: 8px 0; border: none; border-radius: 8px;
+}
+#login button { background: #00a884; color: white; font-weight: bold; cursor: pointer; }
+
+#chat { display: flex; height: 100vh; }
+.sidebar {
+  width: 280px; background: #111b21; border-right: 1px solid #222;
+  padding: 16px; overflow-y: auto;
+}
+.sidebar h3 { margin-bottom: 12px; color: #00a884; }
+.sidebar li {
+  padding: 10px; margin: 4px 0; border-radius: 8px; cursor: pointer;
+  list-style: none; display: flex; align-items: center; gap: 8px;
+}
+.sidebar li:hover { background: #202c33; }
+.dot {
+  width: 10px; height: 10px; border-radius: 50%;
+}
+.dot.online { background: #00a884; }
+.dot.offline { background: #8696a0; }
+
+.main { flex: 1; display: flex; flex-direction: column; }
+.header {
+  background: #202c33; padding: 14px 20px; display: flex; justify-content: space-between;
+}
+#messages {
+  flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 8px;
+}
+.msg {
+  background: #202c33; padding: 10px 14px; border-radius: 8px; max-width: 70%;
+  align-self: flex-start;
+}
+.msg.me { background: #005c4b; align-self: flex-end; }
+.msg small { display: block; font-size: 11px; color: #8696a0; margin-top: 4px; }
+.msg button { margin-left: 8px; font-size: 11px; background: #e74c3c; color: white; border: none; padding: 2px 6px; border-radius: 4px; cursor: pointer; }
+
+#typing { height: 20px; padding: 0 20px; font-size: 13px; color: #8696a0; }
+.input-area {
+  display: flex; padding: 12px; background: #202c33; gap: 8px;
+}
+.input-area input {
+  flex: 1; padding: 12px; border: none; border-radius: 8px; background: #2a3942; color: white;
+}
+.input-area button {
+  padding: 12px 20px; background: #00a884; color: white; border: none; border-radius: 8px; cursor: pointer;
+}
